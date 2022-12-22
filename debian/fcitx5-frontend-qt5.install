@@ -1,0 +1,3 @@
+usr/lib/*/fcitx5/qt5/*
+usr/lib/*/qt5/plugins/platforminputcontexts/*
+usr/libexec/fcitx5-qt5-gui-wrapper
