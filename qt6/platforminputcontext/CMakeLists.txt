@@ -16,6 +16,10 @@ set(plugin_SRCS
     main.cpp
 )
 
+if (BUILD_ONLY_PLUGIN AND BUILD_STATIC_PLUGIN)
+set(plugin_SRCS ${plugin_SRCS} $<TARGET_OBJECTS:Fcitx5Qt6DBusAddons>)
+endif()
+
 add_library(fcitx5platforminputcontextplugin-qt6 ${PLUGIN_LIBRARY_TYPE} ${plugin_SRCS})
 set_target_properties(fcitx5platforminputcontextplugin-qt6 PROPERTIES
                          OUTPUT_NAME fcitx5platforminputcontextplugin
@@ -37,6 +41,7 @@ target_link_libraries(fcitx5platforminputcontextplugin-qt6
                           Qt6::Core
                           Qt6::Gui
                           Qt6::DBus
+                          Qt6::Widgets
                           XCB::XCB
                           Fcitx5Qt6::DBusAddons
                           XKBCommon::XKBCommon

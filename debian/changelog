@@ -1,9 +1,10 @@
-fcitx5-qt (5.0.10-1+deepin1) UNRELEASED; urgency=medium
+fcitx5-qt (5.0.16-0deepin) unstable; urgency=medium
 
   * update
   * update
+  * New upstream release 5.0.16.
 
- -- Debian Input Method Team <debian-input-method@lists.debian.org>  Fri, 09 Dec 2022 10:58:08 +0800
+ -- Debian Input Method Team <debian-input-method@lists.debian.org>  Mon, 13 Feb 2023 11:06:21 +0800
 
 fcitx5-qt (5.0.10-1) unstable; urgency=medium
 

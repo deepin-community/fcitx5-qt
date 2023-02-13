@@ -48,7 +48,6 @@ class MultilineText {
 public:
     MultilineText(const QFont &font, const QString &text) {
         QStringList lines = text.split("\n");
-        int currentY = 0;
         int width = 0;
         QFontMetrics fontMetrics(font);
         fontHeight_ = fontMetrics.ascent() + fontMetrics.descent();
@@ -58,7 +57,6 @@ public:
             doLayout(*layouts_.back());
             width = std::max(width,
                              layouts_.back()->boundingRect().toRect().width());
-            currentY += fontHeight_;
         }
         boundingRect_.setTopLeft(QPoint(0, 0));
         boundingRect_.setSize(QSize(width, lines.size() * fontHeight_));
@@ -85,11 +83,21 @@ private:
     QRect boundingRect_;
 };
 
-FcitxCandidateWindow::FcitxCandidateWindow(QWindow *window, FcitxTheme *theme)
-    : QWindow(), theme_(theme), parent_(window) {
-    setFlags(Qt::ToolTip | Qt::FramelessWindowHint |
-             Qt::BypassWindowManagerHint | Qt::WindowDoesNotAcceptFocus |
-             Qt::NoDropShadowWindowHint);
+FcitxCandidateWindow::FcitxCandidateWindow(QWindow *window,
+                                           QFcitxPlatformInputContext *context)
+    : QWindow(), context_(context), theme_(context->theme()), parent_(window) {
+    constexpr Qt::WindowFlags commonFlags = Qt::FramelessWindowHint |
+                                            Qt::WindowDoesNotAcceptFocus |
+                                            Qt::NoDropShadowWindowHint;
+    if (isWayland_) {
+        // Qt::ToolTip ensures wayland doesn't grab focus.
+        // Not using Qt::BypassWindowManagerHint ensures wayland handle
+        // fractional scale.
+        setFlags(Qt::ToolTip | commonFlags);
+    } else {
+        // Qt::Popup ensures X11 doesn't apply tooltip animation under kwin.
+        setFlags(Qt::Popup | Qt::BypassWindowManagerHint | commonFlags);
+    }
     if (isWayland_) {
         setTransientParent(parent_);
     }
@@ -97,6 +105,7 @@ FcitxCandidateWindow::FcitxCandidateWindow(QWindow *window, FcitxTheme *theme)
     surfaceFormat.setAlphaBufferSize(8);
     setFormat(surfaceFormat);
     backingStore_ = new QBackingStore(this);
+    connect(this, &QWindow::visibleChanged, this, [this] { hoverIndex_ = -1; });
 }
 
 FcitxCandidateWindow::~FcitxCandidateWindow() {}
@@ -307,12 +316,12 @@ void FcitxCandidateWindow::render(QPainter *painter) {
     }
 }
 
-void UpdateLayout(QTextLayout &layout, const QFont &font,
+void UpdateLayout(QTextLayout &layout, const FcitxTheme &theme,
                   std::initializer_list<
                       std::reference_wrapper<const FcitxQtFormattedPreeditList>>
                       texts) {
     layout.clearFormats();
-    layout.setFont(font);
+    layout.setFont(theme.font());
     QVector<QTextLayout::FormatRange> formats;
     QString str;
     int pos = 0;
@@ -333,13 +342,8 @@ void UpdateLayout(QTextLayout &layout, const QFont &font,
                 format.setFontItalic(true);
             }
             if (preedit.format() & FcitxTextFormatFlag_HighLight) {
-                QBrush brush;
-                QPalette palette;
-                palette = QGuiApplication::palette();
-                format.setBackground(QBrush(QColor(
-                    palette.color(QPalette::Active, QPalette::Highlight))));
-                format.setForeground(QBrush(QColor(palette.color(
-                    QPalette::Active, QPalette::HighlightedText))));
+                format.setBackground(theme.highlightBackgroundColor());
+                format.setForeground(theme.highlightColor());
             }
             formats.append(QTextLayout::FormatRange{
                 pos, static_cast<int>(preedit.string().length()), format});
@@ -356,21 +360,19 @@ void FcitxCandidateWindow::updateClientSideUI(
     const FcitxQtFormattedPreeditList &auxDown,
     const FcitxQtStringKeyValueList &candidates, int candidateIndex,
     int layoutHint, bool hasPrev, bool hasNext) {
-    bool preeditVisble = (cursorpos >= 0 || !preedit.isEmpty());
+    bool preeditVisible = !preedit.isEmpty();
     bool auxUpVisbile = !auxUp.isEmpty();
     bool auxDownVisible = !auxDown.isEmpty();
     bool candidatesVisible = !candidates.isEmpty();
     bool visible =
-        preeditVisble || auxUpVisbile || auxDownVisible || candidatesVisible;
-    auto window = QGuiApplication::focusWindow();
-    if (!theme_ || !visible || !QGuiApplication::focusWindow() ||
-        window != parent_) {
+        preeditVisible || auxUpVisbile || auxDownVisible || candidatesVisible;
+    auto window = context_->focusWindowWrapper();
+    if (!theme_ || !visible || !window || window != parent_) {
         hide();
-        hoverIndex_ = -1;
         return;
     }
 
-    UpdateLayout(upperLayout_, theme_->font(), {auxUp, preedit});
+    UpdateLayout(upperLayout_, *theme_, {auxUp, preedit});
     if (cursorpos >= 0) {
         int auxUpLength = 0;
         for (const auto &auxUpText : auxUp) {
@@ -384,7 +386,7 @@ void FcitxCandidateWindow::updateClientSideUI(
         cursor_ = -1;
     }
     doLayout(upperLayout_);
-    UpdateLayout(lowerLayout_, theme_->font(), {auxDown});
+    UpdateLayout(lowerLayout_, *theme_, {auxDown});
     doLayout(lowerLayout_);
     labelLayouts_.clear();
     candidateLayouts_.clear();
@@ -401,8 +403,27 @@ void FcitxCandidateWindow::updateClientSideUI(
 
     actualSize_ = sizeHint();
 
-    QRect cursorRect =
-        QGuiApplication::inputMethod()->cursorRectangle().toRect();
+    if (actualSize_.width() <= 0 || actualSize_.height() <= 0) {
+        hide();
+        return;
+    }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    QSize sizeWithoutShadow = actualSize_.shrunkBy(theme_->shadowMargin());
+#else
+    QSize sizeWithoutShadow =
+        actualSize_ -
+        QSize(theme_->shadowMargin().left() + theme_->shadowMargin().right(),
+              theme_->shadowMargin().top() + theme_->shadowMargin().bottom());
+#endif
+    if (sizeWithoutShadow.width() < 0) {
+        sizeWithoutShadow.setWidth(0);
+    }
+    if (sizeWithoutShadow.height() < 0) {
+        sizeWithoutShadow.setHeight(0);
+    }
+
+    QRect cursorRect = context_->cursorRectangleWrapper();
     QRect screenGeometry;
     // Try to apply the screen edge detection over the window, because if we
     // intent to use this with wayland. It we have no information above screen
@@ -419,19 +440,20 @@ void FcitxCandidateWindow::updateClientSideUI(
     }
 
     int x = cursorRect.left(), y = cursorRect.bottom();
-    if (cursorRect.left() + actualSize_.width() > screenGeometry.right()) {
-        x = screenGeometry.right() - actualSize_.width() + 1;
+    if (cursorRect.left() + sizeWithoutShadow.width() >
+        screenGeometry.right()) {
+        x = screenGeometry.right() - sizeWithoutShadow.width() + 1;
     }
 
     if (x < screenGeometry.left()) {
         x = screenGeometry.left();
     }
 
-    if (y + actualSize_.height() > screenGeometry.bottom()) {
+    if (y + sizeWithoutShadow.height() > screenGeometry.bottom()) {
         if (y > screenGeometry.bottom()) {
-            y = screenGeometry.bottom() - actualSize_.height() - 40;
+            y = screenGeometry.bottom() - sizeWithoutShadow.height() - 40;
         } else { /* better position the window */
-            y = y - actualSize_.height() -
+            y = y - sizeWithoutShadow.height() -
                 ((cursorRect.height() == 0) ? 40 : cursorRect.height());
         }
     }
@@ -444,6 +466,8 @@ void FcitxCandidateWindow::updateClientSideUI(
     resize(actualSize_);
     // hide();
     QPoint newPosition(x, y);
+    newPosition -=
+        QPoint(theme_->shadowMargin().left(), theme_->shadowMargin().top());
     if (newPosition != position()) {
         if (isVisible()) {
             hide();
