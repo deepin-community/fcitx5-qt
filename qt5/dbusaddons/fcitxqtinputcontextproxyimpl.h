@@ -99,6 +99,13 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QStringLiteral("SelectCandidate"), argumentList);
     }
 
+    inline QDBusPendingReply<> SetSupportedCapability(qulonglong caps)
+    {
+        QList<QVariant> argumentList;
+        argumentList << QVariant::fromValue(caps);
+        return asyncCallWithArgumentList(QStringLiteral("SetSupportedCapability"), argumentList);
+    }
+
     inline QDBusPendingReply<> SetCapability(qulonglong caps)
     {
         QList<QVariant> argumentList;
@@ -140,6 +147,7 @@ Q_SIGNALS: // SIGNALS
     void CurrentIM(const QString &name, const QString &uniqueName, const QString &langCode);
     void DeleteSurroundingText(int offset, unsigned int nchar);
     void ForwardKey(unsigned int keyval, unsigned int state, bool type);
+    void NotifyFocusOut();
     void UpdateClientSideUI(FcitxQtFormattedPreeditList preedit, int cursorpos, FcitxQtFormattedPreeditList auxUp, FcitxQtFormattedPreeditList auxDown, FcitxQtStringKeyValueList candidates, int candidateIndex, int layoutHint, bool hasPrev, bool hasNext);
     void UpdateFormattedPreedit(FcitxQtFormattedPreeditList str, int cursorpos);
 };

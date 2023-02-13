@@ -8,4 +8,6 @@ export QT_SELECT := 5
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
-	        -DENABLE_QT4=0
+	        -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON \
+	        -DENABLE_QT4=Off \
+	        -DENABLE_QT6=On
