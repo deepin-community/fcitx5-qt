@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(fcitx5-qt VERSION 5.0.16)
+project(fcitx5-qt VERSION 5.1.0)
 set(FCITX5_QT_VERSION ${PROJECT_VERSION})
 
 set(REQUIRED_QT4_VERSION 4.8.0)
@@ -19,7 +19,6 @@ option(WITH_FCITX_PLUGIN_NAME "Enable plugin name with fcitx" On)
 
 if (BUILD_ONLY_PLUGIN)
   set(LIBRARY_TYPE OBJECT)
-  set(LIBRARY_COMPILE_FLAGS "-fPIC")
 else()
   set(LIBRARY_TYPE SHARED)
   add_definitions(-DFCITX_GETTEXT_DOMAIN=\"fcitx5-qt\")

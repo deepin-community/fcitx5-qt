@@ -9,9 +9,10 @@
 #define QFCITXPLATFORMINPUTCONTEXT_H
 
 #include "fcitxcandidatewindow.h"
-#include "fcitxqtinputcontextproxy.h"
 #include "fcitxqtwatcher.h"
+#include "hybridinputcontext.h"
 #include <QDBusConnection>
+#include <QDBusPendingCallWatcher>
 #include <QDBusServiceWatcher>
 #include <QGuiApplication>
 #include <QKeyEvent>
@@ -41,7 +42,7 @@ public:
     void resetCandidateWindow();
 
     quint64 capability = 0;
-    FcitxQtInputContextProxy *proxy;
+    HybridInputContext *proxy;
     QRect rect;
     // Last key event forwarded.
     std::unique_ptr<QKeyEvent> event;
@@ -116,8 +117,12 @@ public:
     bool filterEvent(const QEvent *event) override;
     QLocale locale() const override;
     bool hasCapability(Capability capability) const override;
+    void showInputPanel() override;
+    void hideInputPanel() override;
+    bool isInputPanelVisible() const override;
 
-    FcitxQtWatcher *watcher() { return watcher_; }
+    auto *watcher() { return watcher_; }
+    auto *fcitx4Watcher() { return fcitx4Watcher_; }
 
     // Use Wrapper as suffix to avoid upstream add function with same name.
     QObject *focusObjectWrapper() const;
@@ -179,15 +184,19 @@ private:
 
     void updateCapability(const FcitxQtICData &data);
     void createICData(QWindow *w);
-    FcitxQtInputContextProxy *validIC();
-    FcitxQtInputContextProxy *validICByWindow(QWindow *window);
+    HybridInputContext *validIC() const;
+    HybridInputContext *validICByWindow(QWindow *window) const;
     bool filterEventFallback(unsigned int keyval, unsigned int keycode,
                              unsigned int state, bool isRelaese);
 
     void updateCursorRect();
     bool objectAcceptsInputMethod() const;
+    bool shouldDisableInputMethod() const;
+
+    void updateInputPanelVisible();
 
     FcitxQtWatcher *watcher_;
+    Fcitx4Watcher *fcitx4Watcher_;
     QString preedit_;
     QString commitPreedit_;
     FcitxQtFormattedPreeditList preeditList_;
@@ -198,6 +207,7 @@ private:
     QPointer<QWindow> lastWindow_;
     QPointer<QObject> lastObject_;
     bool destroy_;
+    bool virtualKeyboardVisible_;
     QScopedPointer<struct xkb_context, XkbContextDeleter> xkbContext_;
     QScopedPointer<struct xkb_compose_table, XkbComposeTableDeleter>
         xkbComposeTable_;
@@ -205,6 +215,7 @@ private:
         xkbComposeState_;
     QLocale locale_;
     FcitxTheme *theme_ = nullptr;
+    bool inputPanelVisible_ = false;
 };
 } // namespace fcitx
 
