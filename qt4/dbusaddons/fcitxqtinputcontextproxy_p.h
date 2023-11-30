@@ -112,20 +112,6 @@ public:
             arg2.setValue(display_);
             list << arg2;
         }
-        // Qt has good support for showing virtual keyboard, so we should
-        // disable the default behavior supported by fcitx5
-        FcitxQtStringKeyValue clientControlVirtualkeyboardShow;
-        clientControlVirtualkeyboardShow.setKey(
-            "clientControlVirtualkeyboardShow");
-        clientControlVirtualkeyboardShow.setValue("true");
-        list << clientControlVirtualkeyboardShow;
-        // Qt has poor support for hiding virtual keyboard, so we should enable
-        // the default behavior supported by fcitx5
-        FcitxQtStringKeyValue clientControlVirtualkeyboardHide;
-        clientControlVirtualkeyboardHide.setKey(
-            "clientControlVirtualkeyboardHide");
-        clientControlVirtualkeyboardHide.setValue("false");
-        list << clientControlVirtualkeyboardHide;
 
         auto result = improxy_->CreateInputContext(list);
         createInputContextWatcher_ = new QDBusPendingCallWatcher(result);
@@ -160,8 +146,6 @@ public:
         QObject::connect(icproxy_,
                          SIGNAL(DeleteSurroundingText(int, unsigned int)), q,
                          SIGNAL(deleteSurroundingText(int, unsigned int)));
-        QObject::connect(icproxy_, SIGNAL(NotifyFocusOut()), q,
-                         SIGNAL(notifyFocusOut()));
 
         delete createInputContextWatcher_;
         createInputContextWatcher_ = nullptr;

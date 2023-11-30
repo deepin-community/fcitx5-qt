@@ -1,1 +1,0 @@
-../../qt5/platforminputcontext/fcitx4inputmethodproxy.cpp

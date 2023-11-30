@@ -162,7 +162,6 @@ Q_SIGNALS: // SIGNALS
                    const QString &langCode);
     void DeleteSurroundingText(int offset, unsigned int nchar);
     void ForwardKey(unsigned int keyval, unsigned int state, bool type);
-    void NotifyFocusOut();
     void UpdateClientSideUI(FcitxQtFormattedPreeditList preedit, int cursorpos,
                             FcitxQtFormattedPreeditList auxUp,
                             FcitxQtFormattedPreeditList auxDown,
