@@ -47,11 +47,6 @@ QDBusPendingReply<> FcitxQtInputContextProxy::focusOut() {
     return d->icproxy_->FocusOut();
 }
 
-QDBusPendingReply<> FcitxQtInputContextProxy::hideVirtualKeyboard() {
-    Q_D(FcitxQtInputContextProxy);
-    return d->icproxy_->HideVirtualKeyboard();
-}
-
 QDBusPendingReply<bool> FcitxQtInputContextProxy::processKeyEvent(
     unsigned int keyval, unsigned int keycode, unsigned int state, bool type,
     unsigned int time) {
@@ -101,11 +96,6 @@ FcitxQtInputContextProxy::setSurroundingTextPosition(unsigned int cursor,
     return d->icproxy_->SetSurroundingTextPosition(cursor, anchor);
 }
 
-QDBusPendingReply<> FcitxQtInputContextProxy::showVirtualKeyboard() {
-    Q_D(FcitxQtInputContextProxy);
-    return d->icproxy_->ShowVirtualKeyboard();
-}
-
 QDBusPendingReply<> FcitxQtInputContextProxy::prevPage() {
     Q_D(FcitxQtInputContextProxy);
     return d->icproxy_->PrevPage();
@@ -125,11 +115,6 @@ QDBusPendingReply<> FcitxQtInputContextProxy::invokeAction(unsigned int action,
                                                            int cursor) {
     Q_D(FcitxQtInputContextProxy);
     return d->icproxy_->InvokeAction(action, cursor);
-}
-
-bool FcitxQtInputContextProxy::isVirtualKeyboardVisible() {
-    Q_D(FcitxQtInputContextProxy);
-    return d->isVirtualKeyboardVisible_;
 }
 
 bool FcitxQtInputContextProxy::supportInvokeAction() const {

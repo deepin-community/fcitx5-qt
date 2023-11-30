@@ -1,16 +1,47 @@
-fcitx5-qt (5.1.0-0deepin) unstable; urgency=medium
+fcitx5-qt (5.0.16-1) unstable; urgency=medium
 
-  * New upstream release 5.1.0.
+  * New upstream release.
 
- -- dengbo <dengbo@dengbo.org>  Fri, 01 Sep 2023 13:08:50 +0800
+ -- Boyuan Yang <byang@debian.org>  Wed, 23 Nov 2022 12:39:06 -0500
 
-fcitx5-qt (5.0.16-0deepin) unstable; urgency=medium
+fcitx5-qt (5.0.15-1) unstable; urgency=medium
 
-  * update
-  * update
-  * New upstream release 5.0.16.
+  * New upstream release.
+  * Use upstream-provided tarball.
 
- -- Debian Input Method Team <debian-input-method@lists.debian.org>  Mon, 13 Feb 2023 11:06:21 +0800
+ -- Boyuan Yang <byang@debian.org>  Tue, 13 Sep 2022 13:30:21 -0400
+
+fcitx5-qt (5.0.14-2) unstable; urgency=medium
+
+  * debian/rules: Pass -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON via
+    dh_auto_configure override. (Closes: #1002674)
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 24 Aug 2022 16:05:03 -0400
+
+fcitx5-qt (5.0.14-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 13 Jul 2022 09:38:37 -0400
+
+fcitx5-qt (5.0.13-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 02 Jun 2022 16:27:32 -0400
+
+fcitx5-qt (5.0.12-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 24 May 2022 21:27:07 -0400
+
+fcitx5-qt (5.0.11-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Enable Qt6 support.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 16 Mar 2022 11:48:39 -0400
 
 fcitx5-qt (5.0.10-1) unstable; urgency=medium
 

@@ -9,7 +9,6 @@
 #define _PLATFORMINPUTCONTEXT_QTKEY_H_
 
 #include <QString>
-#include <cstdint>
 
 int keysymToQtKey(uint32_t keysym, const QString &text);
 

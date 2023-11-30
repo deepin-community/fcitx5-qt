@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(fcitx5-qt VERSION 5.1.0)
+project(fcitx5-qt VERSION 5.0.16)
 set(FCITX5_QT_VERSION ${PROJECT_VERSION})
 
 set(REQUIRED_QT4_VERSION 4.8.0)
@@ -19,6 +19,7 @@ option(WITH_FCITX_PLUGIN_NAME "Enable plugin name with fcitx" On)
 
 if (BUILD_ONLY_PLUGIN)
   set(LIBRARY_TYPE OBJECT)
+  set(LIBRARY_COMPILE_FLAGS "-fPIC")
 else()
   set(LIBRARY_TYPE SHARED)
   add_definitions(-DFCITX_GETTEXT_DOMAIN=\"fcitx5-qt\")
@@ -78,7 +79,7 @@ if(ENABLE_QT5)
 endif()
 
 if(ENABLE_QT6)
-  find_package(Qt6 ${REQUIRED_QT6_VERSION} CONFIG REQUIRED Core DBus Widgets)
+  find_package(Qt6 ${REQUIRED_QT6_VERSION} CONFIG REQUIRED Core DBus)
   find_package(Qt6Gui ${REQUIRED_QT6_VERSION} REQUIRED Private)
   add_subdirectory(qt6)
 endif()

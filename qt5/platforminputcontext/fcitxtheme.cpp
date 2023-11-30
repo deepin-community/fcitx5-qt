@@ -233,8 +233,6 @@ void FcitxTheme::themeChanged() {
     highlightColor_ = readColor(settings, "HighlightColor", "#ffffff");
     highlightBackgroundColor_ =
         readColor(settings, "HighlightBackgroundColor", "#a5a5a5");
-    buttonAlignment_ =
-        settings.value("PageButtonAlignment", "Bottom").toString();
 
     settings.beginGroup("ContentMargin");
     contentMargin_ = readMargin(settings);

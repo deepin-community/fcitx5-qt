@@ -1,3 +1,5 @@
+include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+
 set(FCITX5_QT_EXTRA_PLUGIN_NAME "")
 if (WITH_FCITX_PLUGIN_NAME)
     set(FCITX5_QT_EXTRA_PLUGIN_NAME "\"fcitx\",")
@@ -6,11 +8,6 @@ endif()
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/fcitx5.json.in" "${CMAKE_CURRENT_BINARY_DIR}/fcitx5.json")
 
 set(plugin_SRCS
-    fcitx4watcher.cpp
-    fcitx4inputcontextproxy.cpp
-    fcitx4inputcontextproxyimpl.cpp
-    fcitx4inputmethodproxy.cpp
-    hybridinputcontext.cpp
     qfcitxplatforminputcontext.cpp
     fcitxcandidatewindow.cpp
     fcitxtheme.cpp
@@ -27,7 +24,7 @@ add_library(fcitx5platforminputcontextplugin ${PLUGIN_LIBRARY_TYPE} ${plugin_SRC
 set_target_properties(fcitx5platforminputcontextplugin PROPERTIES
                          AUTOMOC TRUE
                         )
-target_include_directories(fcitx5platforminputcontextplugin PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/common")
+target_include_directories(fcitx5platforminputcontextplugin PRIVATE "${PROJECT_SOURCE_DIR}/common")
 if (BUILD_ONLY_PLUGIN AND BUILD_STATIC_PLUGIN)
 target_compile_definitions(fcitx5platforminputcontextplugin PRIVATE "-DQT_STATICPLUGIN")
 endif()
@@ -43,7 +40,6 @@ target_link_libraries(fcitx5platforminputcontextplugin
                           Qt5::Core
                           Qt5::Gui
                           Qt5::DBus
-                          Qt5::Widgets
                           XCB::XCB
                           Fcitx5Qt5::DBusAddons
                           XKBCommon::XKBCommon
