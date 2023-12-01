@@ -1,5 +1,3 @@
-include_directories(${Qt6Gui_PRIVATE_INCLUDE_DIRS})
-
 set(FCITX5_QT_EXTRA_PLUGIN_NAME "")
 if (WITH_FCITX_PLUGIN_NAME)
     set(FCITX5_QT_EXTRA_PLUGIN_NAME "\"fcitx\",")
@@ -8,6 +6,11 @@ endif()
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/fcitx5.json.in" "${CMAKE_CURRENT_BINARY_DIR}/fcitx5.json")
 
 set(plugin_SRCS
+    fcitx4watcher.cpp
+    fcitx4inputcontextproxy.cpp
+    fcitx4inputcontextproxyimpl.cpp
+    fcitx4inputmethodproxy.cpp
+    hybridinputcontext.cpp
     qfcitxplatforminputcontext.cpp
     fcitxcandidatewindow.cpp
     fcitxtheme.cpp
@@ -40,10 +43,15 @@ endif()
 target_link_libraries(fcitx5platforminputcontextplugin-qt6
                           Qt6::Core
                           Qt6::Gui
+                          Qt6::GuiPrivate
                           Qt6::DBus
+                          Qt6::Widgets
                           XCB::XCB
                           Fcitx5Qt6::DBusAddons
                           XKBCommon::XKBCommon
+                          Qt6::WaylandGlobalPrivate
+                          Qt6::WaylandClient
+                          Qt6::WaylandClientPrivate
                          )
 
 get_target_property(_QT6_QMAKE_EXECUTABLE Qt6::qmake LOCATION)

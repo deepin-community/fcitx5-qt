@@ -10,32 +10,35 @@
 
 #include "fcitxflags.h"
 #include "fcitxqtdbustypes.h"
-#include <QBackingStore>
 #include <QGuiApplication>
 #include <QPainter>
 #include <QPointer>
+#include <QRasterWindow>
 #include <QTextLayout>
-#include <QWindow>
 #include <memory>
+#include <qscopedpointer.h>
 #include <vector>
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+#include <QtWaylandClient/private/qwayland-xdg-shell.h>
+#endif
 
 namespace fcitx {
 
-struct FcitxQtICData;
 class FcitxTheme;
 class MultilineText;
+class QFcitxPlatformInputContext;
 
-class FcitxCandidateWindow : public QWindow {
+class FcitxCandidateWindow : public QRasterWindow {
     Q_OBJECT
 public:
-    explicit FcitxCandidateWindow(QWindow *window, FcitxTheme *theme);
+    explicit FcitxCandidateWindow(QWindow *window,
+                                  QFcitxPlatformInputContext *context);
     ~FcitxCandidateWindow();
 
     void render(QPainter *painter);
 
 public Q_SLOTS:
-    void renderLater();
-    void renderNow();
     void updateClientSideUI(const FcitxQtFormattedPreeditList &preedit,
                             int cursorpos,
                             const FcitxQtFormattedPreeditList &auxUp,
@@ -54,8 +57,7 @@ Q_SIGNALS:
 protected:
     bool event(QEvent *event) override;
 
-    void resizeEvent(QResizeEvent *event) override;
-    void exposeEvent(QExposeEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
     void mouseMoveEvent(QMouseEvent *) override;
     void mouseReleaseEvent(QMouseEvent *) override;
     void wheelEvent(QWheelEvent *) override;
@@ -68,9 +70,10 @@ protected:
 private:
     const bool isWayland_ =
         QGuiApplication::platformName().startsWith("wayland");
+    uint32_t repositionToken_ = 0;
     QSize actualSize_;
+    QPointer<QFcitxPlatformInputContext> context_;
     QPointer<FcitxTheme> theme_;
-    QBackingStore *backingStore_;
     QTextLayout upperLayout_;
     QTextLayout lowerLayout_;
     std::vector<std::unique_ptr<MultilineText>> candidateLayouts_;
@@ -89,6 +92,10 @@ private:
     QRect nextRegion_;
     std::vector<QRect> candidateRegions_;
     QPointer<QWindow> parent_;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+    QScopedPointer<QtWayland::xdg_wm_base> xdgWmBase_;
+#endif
 };
 
 } // namespace fcitx
