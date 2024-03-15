@@ -1,3 +1,9 @@
+fcitx5-qt (5.1.3-1deepin1) unstable; urgency=medium
+
+  * fix: can't switch input methods through the systray menu
+
+ -- zsien <quezhiyong@deepin.org>  Fri, 15 Mar 2024 09:55:08 +0800
+
 fcitx5-qt (5.1.3-1) unstable; urgency=medium
 
   * New upstream release.
