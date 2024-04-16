@@ -1,1 +1,2 @@
 0001-Fix-can-t-switch-input-methods-through-the-systray-m.patch
+0002-Compatible-with-QPlatformInputContextFactory-request.patch
