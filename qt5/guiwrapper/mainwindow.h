@@ -6,20 +6,21 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
-#ifndef FCITXQT5_GUIWRAPPER_MAINWINDOW_H
-#define FCITXQT5_GUIWRAPPER_MAINWINDOW_H
+#ifndef FCITX5QT_GUIWRAPPER_MAINWINDOW_H
+#define FCITX5QT_GUIWRAPPER_MAINWINDOW_H
 
 #include <QDialog>
 
 #include "fcitxqtconfiguiwidget.h"
 #include "ui_mainwindow.h"
 #include <QDBusPendingCallWatcher>
+#include <QWidget>
 
 namespace fcitx {
 
 class FcitxQtControllerProxy;
 class FcitxQtWatcher;
-class MainWindow : public QDialog, public Ui::MainWindow {
+class MainWindow : public QWidget, public Ui::MainWindow {
     Q_OBJECT
 public:
     explicit MainWindow(const QString &path,
@@ -35,6 +36,7 @@ public Q_SLOTS:
 
 protected:
     void showEvent(QShowEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 
 private Q_SLOTS:
     void saveFinished();

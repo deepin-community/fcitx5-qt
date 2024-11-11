@@ -14,9 +14,9 @@ Build-Depends:
  libxkbcommon-dev,
  qt6-base-dev,
  qt6-base-private-dev,
- qt6-wayland,
- qt6-wayland-dev,
- qt6-wayland-private-dev,
+ qt6-wayland [linux-any],
+ qt6-wayland-dev [linux-any],
+ qt6-wayland-private-dev [linux-any],
  qtbase5-dev,
  qtbase5-private-dev,
 Standards-Version: 4.6.2
@@ -92,6 +92,7 @@ Architecture: any
 Multi-Arch: same
 Section: libdevel
 Depends:
+ qtbase5-dev,
  libfcitx5-qt1 (= ${binary:Version}),
  ${misc:Depends},
 Description: Qt library and IM module for fcitx5 (development files)
@@ -157,6 +158,7 @@ Architecture: any
 Multi-Arch: same
 Section: libdevel
 Depends:
+ qt6-base-dev,
  libfcitx5-qt6-1 (= ${binary:Version}),
  ${misc:Depends},
 Description: Qt6 library and IM module for fcitx5 (development files)

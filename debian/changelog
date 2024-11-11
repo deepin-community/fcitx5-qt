@@ -1,3 +1,15 @@
+fcitx5-qt (5.1.8-2deepin1) unstable; urgency=medium
+
+  * New upstream release.
+  [ Pino Toscano ]
+  * Limit Wayland support to Linux archs, as Wayland is available only there.
+  * Fix compatibility with Qt 6.8.
+  * debian/control: Add missing development package dependency to
+    Qt5 and Qt6 dev packages.
+  * debian/libfcitx5-qt6-1.lintian-overrides: Update lintian overrides.
+
+ -- zsien <quezhiyong@deepin.org>  Mon, 11 Nov 2024 14:17:17 +0800
+
 fcitx5-qt (5.1.3-1deepin1) unstable; urgency=medium
 
   * fix: can't switch input methods through the systray menu

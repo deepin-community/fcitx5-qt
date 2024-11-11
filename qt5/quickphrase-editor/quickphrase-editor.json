@@ -1,4 +1,1 @@
-{
-    "addon": "quickphrase",
-    "files": ["editor"]
-}
+../../qt6/quickphrase-editor/quickphrase-editor.json
