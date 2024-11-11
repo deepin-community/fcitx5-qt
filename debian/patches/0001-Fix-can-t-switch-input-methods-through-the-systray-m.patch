@@ -10,10 +10,10 @@ systray menu pops up.
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp b/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
-index f89ca7f..93c0de8 100644
+index b59c13a..caf44e7 100644
 --- a/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
 +++ b/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
-@@ -523,7 +523,7 @@ void QFcitxPlatformInputContext::setFocusObject(QObject *object) {
+@@ -541,7 +541,7 @@ void QFcitxPlatformInputContext::setFocusObject(QObject *object) {
          return;
      }
  
@@ -22,10 +22,10 @@ index f89ca7f..93c0de8 100644
          proxy->focusIn();
          // We need to delegate this otherwise it may cause self-recursion in
          // certain application like libreoffice.
-@@ -611,7 +611,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(
-     if (proxy->isValid() && !uuid.isEmpty()) {
-         QWindow *window = focusWindowWrapper();
-         setFocusGroupForX11(uuid);
+@@ -634,7 +634,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(
+ #else
+         Q_UNUSED(uuid);
+ #endif
 -        if (window && window == w) {
 +        if (window && window == w && !shouldDisableInputMethod()) {
              cursorRectChanged();
