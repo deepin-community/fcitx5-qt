@@ -1,3 +1,9 @@
+fcitx5-qt (5.1.8-2deepin2) unstable; urgency=medium
+
+  * update version for rebuild.
+
+ --  liujianqiang <liujianqiang@uniontech.com>  Mon, 26 May 2025 17:18:19 +0800
+
 fcitx5-qt (5.1.8-2deepin1) unstable; urgency=medium
 
   * New upstream release.
