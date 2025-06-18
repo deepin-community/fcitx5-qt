@@ -1,3 +1,9 @@
+fcitx5-qt (5.1.8-2deepin3) unstable; urgency=medium
+
+  * Handle QLineEdit focus object correctly with QCompleter in Qt6.
+
+ -- Wang Yu <wangyu@uniontch.com>  Wed, 18 Jun 2025 10:27:53 +0800
+
 fcitx5-qt (5.1.8-2deepin2) unstable; urgency=medium
 
   * update version for rebuild.
