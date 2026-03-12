@@ -1,0 +1,14 @@
+Index: fcitx5-qt-community/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
+===================================================================
+--- fcitx5-qt-community.orig/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
++++ fcitx5-qt-community/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
+@@ -1249,9 +1249,6 @@ QWindow *QFcitxPlatformInputContext::foc
+             break;
+         }
+         QObject *realFocusObject = focusObjectWrapper();
+-        if (qGuiApp->focusObject() == realFocusObject) {
+-            break;
+-        }
+         auto *widget = qobject_cast<QWidget *>(realFocusObject);
+         if (!widget) {
+             break;
