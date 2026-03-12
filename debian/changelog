@@ -1,3 +1,11 @@
+fcitx5-qt (5.1.9-1deepin1) unstable; urgency=medium
+
+  * Add patches from master branch:
+    - 0001-Fix-can-t-switch-input-methods-through-the-systray-m.patch
+    - 0002-Handle-QLineEdit-focus-object-correctly-with-QCompleter.patch
+
+ -- Wang Yu <wangyu@uniontech.com>  Wed, 12 Mar 2025 10:50:00 +0800
+
 fcitx5-qt (5.1.9-1) unstable; urgency=medium
 
   * New upstream release.
