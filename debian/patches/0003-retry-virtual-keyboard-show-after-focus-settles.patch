@@ -1,0 +1,30 @@
+diff --git a/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp b/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
+--- a/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
++++ b/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
+@@ -887,7 +887,26 @@ void QFcitxPlatformInputContext::showInp
+     if (proxy == nullptr) {
+         return;
+     }
++
+     proxy->showVirtualKeyboard();
++
++    // First click may race with async focus/cursor updates; retry once after
++    // they settle, since a failed show may not emit
++    // VirtualKeyboardVisibilityChanged(false) to drive an event-based retry.
++    auto window = QPointer<QWindow>(lastWindow_);
++    QTimer::singleShot(100, this, [this, window]() {
++        if ((window && window != lastWindow_) || !objectAcceptsInputMethod()) {
++            return;
++        }
++
++        auto *proxy = validIC();
++        if (proxy == nullptr || proxy->isVirtualKeyboardVisible()) {
++            updateInputPanelVisible();
++            return;
++        }
++
++        proxy->showVirtualKeyboard();
++    });
+ }
+ 
+ void QFcitxPlatformInputContext::hideInputPanel() {
