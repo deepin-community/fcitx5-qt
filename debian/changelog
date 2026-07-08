@@ -1,3 +1,10 @@
+fcitx5-qt (5.1.9-1deepin2) unstable; urgency=medium
+
+  * Add patch to retry virtual keyboard show after focus settles:
+    - 0003-retry-virtual-keyboard-show-after-focus-settles.patch
+
+ -- Wang Yu <wangyu@uniontech.com>  Wed, 08 Jul 2026 15:54:08 +0800
+
 fcitx5-qt (5.1.9-1deepin1) unstable; urgency=medium
 
   * Add patches from master branch:

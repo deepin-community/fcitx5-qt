@@ -1,7 +1,6 @@
-Index: fcitx5-qt-community/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
-===================================================================
---- fcitx5-qt-community.orig/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
-+++ fcitx5-qt-community/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
+diff --git a/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp b/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
+--- a/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
++++ b/qt5/platforminputcontext/qfcitxplatforminputcontext.cpp
 @@ -1249,9 +1249,6 @@ QWindow *QFcitxPlatformInputContext::foc
              break;
          }
