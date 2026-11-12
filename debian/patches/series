@@ -1,3 +1,4 @@
 0001-Fix-can-t-switch-input-methods-through-the-systray-m.patch
 0002-Handle-QLineEdit-focus-object-correctly-with-QCompleter.patch
 0003-retry-virtual-keyboard-show-after-focus-settles.patch
+0004-Adapt-Qt6-private-module-lookup-for-Qt-6.10.patch

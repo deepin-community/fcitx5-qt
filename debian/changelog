@@ -1,3 +1,9 @@
+fcitx5-qt (5.1.9-1deepin4) unstable; urgency=medium
+
+  * Add patch to find Qt6 private CMake packages explicitly on Qt >= 6.10.
+
+ -- xiepengfei <xiepengfei@uniontech.com>  Thu, 12 Nov 2026 13:46:32 +0800
+
 fcitx5-qt (5.1.9-1deepin3) unstable; urgency=medium
 
   * Rebuild with LTO enabled (dpkg vendor feature optimize/lto).

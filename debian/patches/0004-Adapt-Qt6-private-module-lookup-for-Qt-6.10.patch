@@ -1,0 +1,35 @@
+diff --git a/qt6/CMakeLists.txt b/qt6/CMakeLists.txt
+index bff3a03..ef0993a 100644
+--- a/qt6/CMakeLists.txt
++++ b/qt6/CMakeLists.txt
+@@ -1,8 +1,18 @@
+ 
+ find_package(Qt6 ${REQUIRED_QT6_VERSION} CONFIG REQUIRED Core DBus Widgets)
+ find_package(Qt6Gui ${REQUIRED_QT6_VERSION} REQUIRED Private)
++# Since Qt 6.10 private module targets ship as standalone CMake packages
++# (e.g. Qt6GuiPrivate) and are no longer auto-created by the module's
++# Qt6GuiTargets.cmake, so fetch them explicitly when the old-style
++# <Module> REQUIRED Private lookup did not create the target.
++if (NOT TARGET Qt6::GuiPrivate)
++  find_package(Qt6GuiPrivate ${REQUIRED_QT6_VERSION} CONFIG REQUIRED)
++endif()
+ if (ENABLE_QT6_WAYLAND_WORKAROUND)
+   find_package(Qt6WaylandClient ${REQUIRED_QT6_VERSION} REQUIRED Private)
++  if (NOT TARGET Qt6::WaylandClientPrivate)
++    find_package(Qt6WaylandClientPrivate ${REQUIRED_QT6_VERSION} CONFIG REQUIRED)
++  endif()
+   find_package(Qt6WaylandGlobalPrivate ${REQUIRED_QT6_VERSION} REQUIRED)
+ endif()
+ 
+diff --git a/qt6/immodule-probing/CMakeLists.txt b/qt6/immodule-probing/CMakeLists.txt
+index efa5e4b..c1f122d 100644
+--- a/qt6/immodule-probing/CMakeLists.txt
++++ b/qt6/immodule-probing/CMakeLists.txt
+@@ -1,5 +1,4 @@
+ add_executable(fcitx5-qt6-immodule-probing main.cpp)
+-target_include_directories(fcitx5-qt6-immodule-probing PRIVATE ${Qt6Gui_PRIVATE_INCLUDE_DIRS})
+-target_link_libraries(fcitx5-qt6-immodule-probing Qt6::Gui)
++target_link_libraries(fcitx5-qt6-immodule-probing Qt6::Gui Qt6::GuiPrivate)
+ 
+ install(TARGETS fcitx5-qt6-immodule-probing DESTINATION "${CMAKE_INSTALL_BINDIR}")
+\ No newline at end of file
